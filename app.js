@@ -29,8 +29,20 @@ var domStrings = {
 })();
 
 var controller = (function(budgetCtrl,uiCtrl){
+  //structure and organize the codes
+  var setEventListeners = function(){
     var myDOM = uiCtrl.getDOMstring();
-    var ctrlAdd = function(){
+    document.querySelector(myDOM.inputBtnStrng).addEventListener('click',ctrlAdd);
+
+   document.addEventListener('keypress',function(event){
+   if(event.keyCode === 13 || event.which === 13){
+ ctrlAdd();
+    }
+})
+};
+  
+    
+var ctrlAdd = function(){
 // console.log('you have clicked the button');
 //TO DO LIST AFTER THE BUTTON CLICKED...
 //.1 Get input field data
@@ -50,15 +62,14 @@ console.log(inputs);
 
 
 //.5 Display the budget on UI
+ };
+return{
+    init:function(){
+        console.log('app starts......');
+        setEventListeners();
     }
-document.querySelector(myDOM.inputBtnStrng).addEventListener('click',ctrlAdd);
-
-document.addEventListener('keypress',function(event){
-    if(event.keyCode === 13 || event.which === 13){
-      ctrlAdd();
-    }
-})
-
+};
 
 
 })(budgetController,UIcontroller);
+controller.init();//the app starts here
