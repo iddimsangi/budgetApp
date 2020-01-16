@@ -3,21 +3,33 @@ var budgetController = (function(){
 })();
 
 var UIcontroller = (function(){
+//create a private object for DOM Strings
+var domStrings = {
+        typeStrng:'.add__type',
+        descriptionStrng:'.add__description',
+        inputValueStrng:'.add__value',
+        inputBtnStrng:'.add__btn'
+};
+
 //create a public method for share input field values
     return{
         getInputFields:function(){
             return{
-                type: document.querySelector('.add__type').value,
-                description: document.querySelector('.add__description').value,
-                inputValue: document.querySelector('.add__value').value
+                type: document.querySelector(domStrings.typeStrng).value,
+                description: document.querySelector(domStrings.descriptionStrng).value,
+                inputValue: document.querySelector(domStrings.inputValueStrng).value
             }
-        }
+        },
+        //method that will make a private object to be public to the other controller
+       getDOMstring: function(){
+            return domStrings;
+       } 
     }
-
 
 })();
 
 var controller = (function(budgetCtrl,uiCtrl){
+    var myDOM = uiCtrl.getDOMstring();
     var ctrlAdd = function(){
 // console.log('you have clicked the button');
 //TO DO LIST AFTER THE BUTTON CLICKED...
@@ -39,7 +51,7 @@ console.log(inputs);
 
 //.5 Display the budget on UI
     }
-document.querySelector('.add__btn').addEventListener('click',ctrlAdd);
+document.querySelector(myDOM.inputBtnStrng).addEventListener('click',ctrlAdd);
 
 document.addEventListener('keypress',function(event){
     if(event.keyCode === 13 || event.which === 13){
