@@ -7,13 +7,8 @@ var UIcontroller = (function(){
 })();
 
 var controller = (function(budgetCtrl,uiCtrl){
-document.querySelector('.add__btn').addEventListener('click',function(){
-    console.log('testing button clicking...');
-})
-
-document.addEventListener('keypress',function(event){
-    console.log(event);
-})
+    var ctrlAdd = function(){
+console.log('you have clicked the button');
 //TO DO LIST AFTER THE BUTTON CLICKED...
 //.1 Get input field data
 
@@ -32,6 +27,15 @@ document.addEventListener('keypress',function(event){
 
 
 //.5 Display the budget on UI
+    }
+document.querySelector('.add__btn').addEventListener('click',ctrlAdd);
+
+document.addEventListener('keypress',function(event){
+    if(event.keyCode === 13 || event.which === 13){
+      ctrlAdd();
+    }
+})
+
 
 
 })(budgetController,UIcontroller);
