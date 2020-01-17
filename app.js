@@ -51,7 +51,7 @@ var UIcontroller = (function(){
 var domStrings = {
         typeStrng:'.add__type',
         descriptionStrng:'.add__description',
-        inputValueStrng:'.add__value',
+        valueStrng:'.add__value',
         inputBtnStrng:'.add__btn',
         expContainer:'.expenses__list',
         incContainer:'.income__list'
@@ -63,34 +63,32 @@ var domStrings = {
             return{
                 type: document.querySelector(domStrings.typeStrng).value,
                 description: document.querySelector(domStrings.descriptionStrng).value,
-                value: document.querySelector(domStrings.inputValueStrng).value
+                value: document.querySelector(domStrings.valueStrng).value
             };
         },
-        //method that will make a private object to be public to the other controller
+            //method for retreive the data from DOM
+            addList:function(obj,type){
+            var html,newHtml,element;
+            //create HTML Strings with placeholders text
+            if(type === 'exp'){
+                element = domStrings.expContainer;
+ html ='<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+            }else if(type === 'inc'){
+                element = domStrings.incContainer;
+ html ='<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
+            }
+            //Replace the place holders text with some actual data
+            newHtml = html.replace('%id%', obj.id);
+            newHtml = newHtml.replace('%description%', obj.description);
+            newHtml = newHtml.replace('%value%', obj.value);
+ 
+            //Insert the HTML into the DOM
+            document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
+ 
+        },
       
-
         getDOMstring: function(){
             return domStrings;
-       } ,
-       //method for retreive the data from DOM
-       addList:function(obj,type){
-           var html,newHtml,element;
-           //create HTML Strings with placeholders text
-           if(type === 'exp'){
-               element = domStrings.expContainer;
-html ='<div class="item clearfix" id="expense-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__percentage">21%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
-           }else if(type === 'inc'){
-               element = domStrings.incContainer;
-html ='<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div><div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"><button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div></div>';
-           }
-           //Replace the place holders text with some actual data
-           newHtml = html.replace('%id%', obj.id);
-           newHtml = newHtml.replace('%description%', obj.description);
-           newHtml = newHtml.replace('%value%', obj.value);
-
-           //Insert the HTML into the DOM
-           document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
-
        }
     }
 
