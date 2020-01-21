@@ -1,14 +1,16 @@
 var budgetController = (function(){
-    var Expenses = function(id,description,value){
+    var Expenses = function(id, description, value){
         this.id = id;
         this.description = description;
         this.value = value;
     };
-    var Incomes = function(id,description,value){
+
+    var Incomes = function(id, description, value){
         this.id = id;
         this.description = description;
         this.value = value;
     };
+
     var data ={
         allItems:{
             exp:[],
@@ -20,7 +22,8 @@ var budgetController = (function(){
         }
     };
     return{
-        addItem:function(type,des,val){
+        
+        addItem:function(type, des, val){
             var newItem,ID;
         if(data.allItems[type].length > 0){
             ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
@@ -29,13 +32,13 @@ var budgetController = (function(){
         }
            
             if(type === 'exp'){
-                newItem = new Expenses(ID,des,val);
+                newItem = new Expenses(ID, des, val);
             }else if(type === 'inc'){
-                newItem = new Incomes(ID,des,val);
+                newItem = new Incomes(ID, des, val);
             }
-            return data.allItems[type].push(newItem);
+             data.allItems[type].push(newItem);
             // data.allItems.exp/inc.push(newItem);
-           
+           return newItem;
         },
         testing:function(){
             console.log(data);
@@ -67,8 +70,8 @@ var domStrings = {
             };
         },
             //method for retreive the data from DOM
-            addList:function(obj,type){
-            var html,newHtml,element;
+            addList:function(obj, type){
+            var html, newHtml, element;
             //create HTML Strings with placeholders text
             if(type === 'exp'){
                 element = domStrings.expContainer;
@@ -95,9 +98,7 @@ var domStrings = {
 })();
 
 
-
-
-var controller = (function(budgetCtrl,uiCtrl){
+var controller = (function(budgetCtrl, uiCtrl){
   //structure and organize the codes
   var setEventListeners = function(){
     var myDOM = uiCtrl.getDOMstring();
@@ -115,15 +116,15 @@ var ctrlAdd = function(){
 // console.log('you have clicked the button');
 //TO DO LIST AFTER THE BUTTON CLICKED...
 //.1 Get input field data
-var inputs = uiCtrl.getInputFields();
-console.log(inputs);
+var input = uiCtrl.getInputFields();
+// console.log(inputs);
 
 //.2 Add the item to the budget controller
-var newItem = budgetCtrl.addItem(inputs.type, inputs.description, inputs.value);
+var newItemAded = budgetCtrl.addItem(input.type, input.description, input.value);
 
 
 //.3 Add the item to the UI
-uiCtrl.addList(newItem, inputs.type);
+uiCtrl.addList(newItemAded, input.type);
 
 
 //.4 Calculate the budget
@@ -140,5 +141,5 @@ return{
 };
 
 
-})(budgetController,UIcontroller);
+})(budgetController, UIcontroller);
 controller.init();//the app starts here
