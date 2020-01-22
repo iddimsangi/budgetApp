@@ -89,6 +89,18 @@ var domStrings = {
             document.querySelector(element).insertAdjacentHTML('beforeend', newHtml);
  
         },
+        clearFields:function(){
+            var fields, fieldArr;
+          fields = document.querySelectorAll(domStrings.descriptionStrng +', '+domStrings.valueStrng);
+          fieldArr = Array.prototype.slice.call(fields);
+
+          fieldArr.forEach(function(curr, index, array){
+           curr.value = "";
+           fieldArr[0].focus();
+          });
+
+
+        },
       
         getDOMstring: function(){
             return domStrings;
@@ -126,7 +138,8 @@ var newItemAded = budgetCtrl.addItem(input.type, input.description, input.value)
 //.3 Add the item to the UI
 uiCtrl.addList(newItemAded, input.type);
 
-
+//.4A Clearfields and put the focus to description
+uiCtrl.clearFields();
 //.4 Calculate the budget
 
 
