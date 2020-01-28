@@ -10,8 +10,14 @@ var budgetController = (function(){
         this.description = description;
         this.value = value;
     };
-
-    var data ={
+var calculateTotal = function(type){
+    var sum = 0;
+    data.allItems[type].forEach(function(cur){
+        sum += cur.value; 
+    });
+    data.totals[type] = sum;
+}
+    var data = {
         allItems:{
             exp:[],
             inc:[]
@@ -19,7 +25,9 @@ var budgetController = (function(){
         totals:{
             exp:0,
             inc:0
-        }
+        },
+        budget:0,
+        perc:-1
     };
     return{
         
@@ -40,6 +48,25 @@ var budgetController = (function(){
             // data.allItems.exp/inc.push(newItem);
            return newItem;
         },
+        calculateBudget:function(){
+            //1. calculate total incomes and expenses
+            calculateTotal('inc');
+            calculateTotal('exp');
+            //2. calculate budget income - expenses
+            data.budget = data.totals.inc - data.totals.exp;
+            //3. calcate the percentage of the income
+
+            data.perc = Math.round((data.totals.exp / data.totals.inc)*100);
+           
+        },
+        getBudgets:function(){
+            return{
+                budgetIncome: data.totals.inc,
+                budgetExpenses: data.totals.exp,
+                budgetTotal: data.budget,
+                budgetPerc: data.perc
+            }
+        },
         testing:function(){
             console.log(data);
         }
@@ -57,7 +84,12 @@ var domStrings = {
         valueStrng:'.add__value',
         inputBtnStrng:'.add__btn',
         expContainer:'.expenses__list',
-        incContainer:'.income__list'
+        incContainer:'.income__list',
+        budgetLebel: '.budget__value',
+        incLabel:'.budget__income--value',
+        incPercLabel:'.budget__income--percentage',
+        expLabel:'.budget__expenses--value',
+        expPercLabel:'.budget__expenses--percentage'
 };
 
 //create a public method for share input field values
@@ -66,7 +98,7 @@ var domStrings = {
             return{
                 type: document.querySelector(domStrings.typeStrng).value,
                 description: document.querySelector(domStrings.descriptionStrng).value,
-                value:parseFloat(document.querySelector(domStrings.valueStrng).value) 
+                value: parseFloat(document.querySelector(domStrings.valueStrng).value) 
             };
         },
             //method for retreive the data from DOM
@@ -90,7 +122,7 @@ var domStrings = {
  
         },
         clearFields:function(){
-            var fields, fieldArr;
+          var fields, fieldArr;
           fields = document.querySelectorAll(domStrings.descriptionStrng +', '+domStrings.valueStrng);
           fieldArr = Array.prototype.slice.call(fields);
 
@@ -99,9 +131,19 @@ var domStrings = {
            fieldArr[0].focus();
           });
 
-
+  
         },
-      
+        getBudgetUi:function(obj){
+           document.querySelector(domStrings.incLabel).textContent = obj.budgetIncome;
+           document.querySelector(domStrings.expLabel).textContent = obj.budgetExpenses;
+           document.querySelector(domStrings.budgetLebel).textContent = obj.budgetTotal;
+           if(obj.budgetIncome > 0){
+            document.querySelector(domStrings.expPercLabel).textContent = obj.budgetPerc + '%';
+           }else {
+            document.querySelector(domStrings.expPercLabel).textContent = '---';
+           }
+           
+        },
         getDOMstring: function(){
             return domStrings;
        }
@@ -124,11 +166,13 @@ var controller = (function(budgetCtrl, uiCtrl){
 };
 
 var updateBudget = function(){
-    //.1 Calculate the budget
-
-
+//.1 Calculate the budget
+budgetCtrl.calculateBudget();
+//.2 Return the budget
+var budget = budgetCtrl.getBudgets();
 
 //.3 Display the budget on UI
+uiCtrl.getBudgetUi(budget);
 
 };
     
@@ -151,13 +195,24 @@ uiCtrl.addList(newItemAded, input.type);
 uiCtrl.clearFields();
 //5.update the budget
 updateBudget();
+
 }
 
 
  };
+
+
 return{
     init:function(){
         console.log('app starts......');
+        uiCtrl.getBudgetUi(
+            {
+                budgetIncome:0,
+                budgetExpenses:0,
+                budgetTotal:0,
+                budgetPerc:0
+            }
+        );
         setEventListeners();
     }
 };
